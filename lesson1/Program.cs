@@ -8,6 +8,12 @@ namespace lesson1
         public bool Expected { get; set; }
         public Exception ExpectedException { get; set; }
     }
+    public class TestCaseNew
+    {
+        public string X { get; set; }
+        public bool Expected { get; set; }
+        public Exception ExpectedException { get; set; }
+    }
     class Program
     {
         static void TestNumber(TestCase testCase)
@@ -29,7 +35,6 @@ namespace lesson1
             {
                 if (testCase.ExpectedException != null)
                 {
-                    //TODO add type exception tests;
                     Console.WriteLine("VALID TEST");
                 }
                 else
@@ -38,6 +43,7 @@ namespace lesson1
                 }
             }
         }
+
         static void Main(string[] args)
         {
             //Вот такая петрушка, на рабочей машине приходится указывать, что работаем в юникоде
@@ -56,7 +62,7 @@ namespace lesson1
 
             var testCase1 = new TestCase()
             {
-                X = 2,
+                X = 4,
                 Expected = false,
                 ExpectedException = null
             };
@@ -66,9 +72,29 @@ namespace lesson1
                 Expected = true,
                 ExpectedException = null
             };
-
-            TestNumber(testCase1);
+            var testCase3 = new TestCase()
+            {
+                X = -7,
+                Expected = true,
+                ExpectedException = null
+            };
+            var testCase4 = new TestCase()
+            {
+                X = 1,
+                Expected = true,
+                ExpectedException = null
+            };
+            var testCase5 = new TestCase()
+            {
+                X = 2147483647,
+                Expected = true,
+                ExpectedException = null
+            };
+            TestNumber(testCase1); 
             TestNumber(testCase2);
+            TestNumber(testCase3);
+            TestNumber(testCase4);
+            TestNumber(testCase5);
         }
 
         static bool getAns(int numberic)
