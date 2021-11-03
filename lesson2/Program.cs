@@ -24,7 +24,7 @@ namespace lesson2
     public class MyLinkedList : ILinkedList
     {
         private Node first;
-        //private Node last;
+        private Node last;
 
         public int GetCount()
         {
@@ -50,6 +50,7 @@ namespace lesson2
                 }
                 var newNode = new Node { Value = value };
                 node.NextNode = newNode;
+                newNode.PrevNode = node;
             }
             else
             {
@@ -63,12 +64,18 @@ namespace lesson2
             var nextNode = node.NextNode;
             node.NextNode = newNode;
             newNode.NextNode = nextNode;
+            last = nextNode;
         }
 
         public void RemoveNode(int index)
         {
+            // так как мы храним первый и последний элементы, считаю 1ым элементом не 0 а 1.
             var node = first;
             if (index == 0)
+            {
+                index = 1;
+            }
+            if (index == 1)
             {
                 node = first.NextNode;
                 first.NextNode = null;
@@ -77,19 +84,19 @@ namespace lesson2
             else
             {
                 int i = 1;
-                while (i <= index)
+                while (i < index)
                 {
-                    if ((i == index-1 || index == 1) && node.NextNode.NextNode != null)
-                    {
-                        node.NextNode = node.NextNode.NextNode;
-                        i++;
-                    }
-                    else if (i == index-1 && node.NextNode.NextNode == null)
-                    {
-                        node.NextNode = null;
-                    }
                     node = node.NextNode;
                     i++;
+                }
+                if (i == index && node.NextNode != null)
+                {
+                    node.PrevNode.NextNode = node.NextNode;
+                    node.NextNode.PrevNode = node.PrevNode;
+                }
+                else if (i == index && node.NextNode == null)
+                {
+                    node.PrevNode.NextNode = null;
                 }
             }
         }
@@ -130,7 +137,7 @@ namespace lesson2
             ListNew.AddNode(62);
             ListNew.AddNode(36);
             ListNew.printNode();
-            ListNew.RemoveNode(1);
+            ListNew.RemoveNode(2);
             ListNew.printNode();
 
         }
