@@ -24,7 +24,7 @@ namespace lesson2
     public class MyLinkedList : ILinkedList
     {
         private Node first;
-        private Node last;
+        //private Node last;
 
         public int GetCount()
         {
@@ -59,12 +59,39 @@ namespace lesson2
 
         public void AddNodeAfter(Node node, int value)
         {
-            
+            var newNode = new Node { Value = value };
+            var nextNode = node.NextNode;
+            node.NextNode = newNode;
+            newNode.NextNode = nextNode;
         }
 
         public void RemoveNode(int index)
         {
-            
+            var node = first;
+            if (index == 0)
+            {
+                node = first.NextNode;
+                first.NextNode = null;
+                first = node;
+            }
+            else
+            {
+                int i = 1;
+                while (i <= index)
+                {
+                    if ((i == index-1 || index == 1) && node.NextNode.NextNode != null)
+                    {
+                        node.NextNode = node.NextNode.NextNode;
+                        i++;
+                    }
+                    else if (i == index-1 && node.NextNode.NextNode == null)
+                    {
+                        node.NextNode = null;
+                    }
+                    node = node.NextNode;
+                    i++;
+                }
+            }
         }
 
         public void RemoveNode(Node node)
@@ -75,6 +102,18 @@ namespace lesson2
         public Node FindNode(int searchValue)
         {
             return null;
+        }
+
+        public void printNode()
+        {
+            var node = first;
+            Console.Write($"{node.Value} -> ");
+            while (node.NextNode != null)
+            {
+                Console.Write($"{node.NextNode.Value} -> ");
+                node = node.NextNode;
+            }
+            Console.WriteLine();
         }
     }
 
@@ -87,6 +126,13 @@ namespace lesson2
             ListNew.AddNode(5);
             ListNew.AddNode(13);
             ListNew.AddNode(6);
+            ListNew.AddNode(9);
+            ListNew.AddNode(62);
+            ListNew.AddNode(36);
+            ListNew.printNode();
+            ListNew.RemoveNode(1);
+            ListNew.printNode();
+
         }
     }
 }
