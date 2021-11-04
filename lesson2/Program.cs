@@ -51,10 +51,12 @@ namespace lesson2
                 var newNode = new Node { Value = value };
                 node.NextNode = newNode;
                 newNode.PrevNode = node;
+                last = newNode;
             }
             else
             {
                 first = new Node { Value = value };
+                last = first;
             }
         }
 
@@ -97,17 +99,55 @@ namespace lesson2
                 else if (i == index && node.NextNode == null)
                 {
                     node.PrevNode.NextNode = null;
+                    last = node.PrevNode;
                 }
             }
         }
 
         public void RemoveNode(Node node)
         {
+            var tempNode = first;
+            if (node != null)
+            {
+                if (node == first)
+                {
+                    first = tempNode.NextNode;
+                    tempNode.NextNode.PrevNode = null;
+                    //tempNode.NextNode = null;
+                }
+                else
+                {
+                    while (tempNode != last)
+                    {
+                        if (tempNode == node && tempNode != last)
+                        {
+                            tempNode.PrevNode.NextNode = tempNode.NextNode;
+                            tempNode.NextNode.PrevNode = tempNode.PrevNode;
+                        }
+                        else if (tempNode == node && tempNode == last)
+                        {
+                            tempNode.PrevNode.NextNode = null;
+                            //tempNode.PrevNode = null;
+                            last = tempNode;
+                        }
+                        tempNode = tempNode.NextNode;
+                    }
+                }
+            }
             
         }
 
         public Node FindNode(int searchValue)
         {
+            var node = first;
+            while (node.NextNode != null)
+            {
+                if (node.Value == searchValue)
+                {
+                    return node;
+                }
+                node = node.NextNode;
+            }
             return null;
         }
 
@@ -137,9 +177,13 @@ namespace lesson2
             ListNew.AddNode(62);
             ListNew.AddNode(36);
             ListNew.printNode();
-            ListNew.RemoveNode(2);
-            ListNew.printNode();
 
+            ListNew.RemoveNode(3);
+            ListNew.printNode();
+            Node tmp = ListNew.FindNode(13);
+            Console.WriteLine($"Find Node: {tmp.Value}");
+            ListNew.RemoveNode(tmp);
+            ListNew.printNode();
         }
     }
 }
