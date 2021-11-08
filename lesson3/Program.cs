@@ -8,19 +8,6 @@ namespace lesson3
     {
         static void Main(string[] args)
         {
-/*            var rand = new Random(100);
-            for (int i = 0; i < 10; i++)
-            {
-                PointClass arrGenClass = new PointClass() { X = rand.Next(), Y = rand.Next() };
-                PointClass[] arrayPointClass = new PointClass[10];
-                arrayPointClass[i] = arrGenClass;
-            }
-            for (int i = 0; i < 10; i++)
-            {
-                PointStruct arrGenStruct = new PointStruct() { X = rand.Next(), Y = rand.Next() };
-                PointStruct[] arrayPointStruct = new PointStruct[10];
-                arrayPointStruct[i] = arrGenStruct;
-            }*/
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
         }
     }
@@ -39,33 +26,41 @@ namespace lesson3
 
     public class BechmarkClass
     {
+        [Params(0, 1, 2)]
+        public int AIdx { get; set; }
+
+        [Params(0, 1, 2)]
+        public int BIdx { get; set; }
+
+        private PointClass[] clArray  = ClassArray();
+        private PointStruct[] stArray = StructArray();
+
         public static PointClass[] ClassArray()
         {
             var rand = new Random(100);
-            PointClass[] arrayPointClass = new PointClass[10];
-            for (int i = 0; i < 10; i++)
+            PointClass[] arrayPointClass = new PointClass[2];
+            for (int i = 0; i < 3; i++)
             {
-                PointClass arrGenClass = new PointClass() { X = rand.Next(), Y = rand.Next() };
+                PointClass arrGenClass = new PointClass() { X = 1*i, Y = 5*i };
                 arrayPointClass[i] = arrGenClass;
             }
+
             return arrayPointClass;
         }
 
-        private PointClass[] clArray = ClassArray();
 
         public static PointStruct[] StructArray()
         {
             var rand = new Random(100);
-            PointStruct[] arrayPointStruct = new PointStruct[10];
-            for (int i = 0; i < 10; i++)
+            PointStruct[] arrayPointStruct = new PointStruct[2];
+            for (int i = 0; i < 3; i++)
             {
-                PointStruct arrGenClass = new PointStruct() { X = rand.Next(), Y = rand.Next() };
+                PointStruct arrGenClass = new PointStruct() { X = 1 * i, Y = 5 * i };
                 arrayPointStruct[i] = arrGenClass;
             }
             return arrayPointStruct;
         }
 
-        private PointStruct[] stArray = StructArray();
 
         public static float PointDistanceClass(PointClass pointOne, PointClass pointTwo)
         {
@@ -98,38 +93,35 @@ namespace lesson3
         [Benchmark]
         public void floatPointDistanceClass()
         {
-            //PointClass pointOne = new PointClass() { X = 4, Y = 5 };
-            //PointClass pointTwo = new PointClass() { X = 12, Y = 24 };
-            for (int i = 0; i < 10; i = i + 2)
-            {
-                PointDistanceClass(clArray[i], clArray[i+1]);
-            }
+            var pointOne = clArray[AIdx];
+            var pointTwo = clArray[BIdx];
+            PointDistanceClass(pointOne, pointTwo);
+
         }
 
         [Benchmark]
         public void floatPointDistance()
         {
-            PointStruct pointOne = new PointStruct() { X = 4, Y = 5 };
-            PointStruct pointTwo = new PointStruct() { X = 12, Y = 24 };
+            var pointOne = stArray[AIdx];
+            var pointTwo = stArray[BIdx];
             PointDistance(pointOne, pointTwo);
         }
 
         [Benchmark]
         public void PointDistanceShort()
         {
-            PointStruct pointOne = new PointStruct() { X = 4, Y = 5 };
-            PointStruct pointTwo = new PointStruct() { X = 12, Y = 24 };
+            var pointOne = stArray[AIdx];
+            var pointTwo = stArray[BIdx];
             PointDistanceShort(pointOne, pointTwo);
         }
 
         [Benchmark]
         public void PointDistanceDouble()
         {
-            PointStruct pointOne = new PointStruct() { X = 4, Y = 5 };
-            PointStruct pointTwo = new PointStruct() { X = 12, Y = 24 };
+            var pointOne = stArray[AIdx];
+            var pointTwo = stArray[BIdx];
             PointDistanceDouble(pointOne, pointTwo);
         }
-
     }
 }
 
