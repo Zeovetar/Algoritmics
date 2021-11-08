@@ -37,11 +37,11 @@ namespace lesson3
 
         public static PointClass[] ClassArray()
         {
-            var rand = new Random(100);
-            PointClass[] arrayPointClass = new PointClass[2];
+            var rand = new Random(100); 
+            PointClass[] arrayPointClass = new PointClass[3];
             for (int i = 0; i < 3; i++)
             {
-                PointClass arrGenClass = new PointClass() { X = 1*i, Y = 5*i };
+                PointClass arrGenClass = new PointClass() { X = 1 * i, Y = 5 * i };
                 arrayPointClass[i] = arrGenClass;
             }
 
@@ -52,7 +52,7 @@ namespace lesson3
         public static PointStruct[] StructArray()
         {
             var rand = new Random(100);
-            PointStruct[] arrayPointStruct = new PointStruct[2];
+            PointStruct[] arrayPointStruct = new PointStruct[3];
             for (int i = 0; i < 3; i++)
             {
                 PointStruct arrGenClass = new PointStruct() { X = 1 * i, Y = 5 * i };
