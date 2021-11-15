@@ -11,6 +11,7 @@ namespace lesson4
         {
             BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
             /*
+             * Сравнение поиска в массиве строк и в хэшсете
             |               Method |         Mean |      Error |     StdDev |
             |--------------------- |-------------:|-----------:|-----------:|
             | stringArrayBenchmark | 25,354.12 ns | 497.907 ns | 465.742 ns |
