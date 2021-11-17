@@ -7,7 +7,23 @@ namespace BinaryTree
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var tree = new ChangeTree();
+            tree.AddItem(10);
+            tree.AddItem(7);
+            tree.AddItem(11);
+            tree.AddItem(9);
+            var strRoot = tree.GetRoot();
+            Console.WriteLine(strRoot.Value);
+            var searchNode = tree.GetNodeByValue(8);
+            try
+            {
+                Console.WriteLine($"Value: {searchNode.Value}, LeftChild: {searchNode.LeftChild}, RightChild: {searchNode.RightChild}");
+            }
+            catch (NullReferenceException Ex)
+            {
+                Console.WriteLine(Ex.Message);
+            }
+            tree.PrintTree();
         }
     }
 
@@ -29,7 +45,7 @@ namespace BinaryTree
 
         public override int GetHashCode()
         {
-            throw new NotImplementedException();
+            return Value;
         }
     }
 
@@ -44,29 +60,122 @@ namespace BinaryTree
 
     public class ChangeTree : ITree
     {
+        private TreeNode root;
+        private int depth = 0;
         public void AddItem(int value)
         {
-            throw new NotImplementedException();
+            if (root == null)
+                root = new TreeNode { Value = value };
+            else
+            {
+                var tempNode = root;
+                do
+                {
+                    if (value < tempNode.Value)
+                    {
+                        if (tempNode.LeftChild != null)
+                        {
+                            tempNode = tempNode.LeftChild;
+                            depth++;
+                        }
+                        else
+                        {
+                            tempNode.LeftChild = new TreeNode { Value = value };
+                        }
+                    }
+                    if (value > tempNode.Value)
+                    {
+                        if (tempNode.RightChild != null)
+                        {
+                            tempNode = tempNode.RightChild;
+                            depth++;
+                        }
+                        else
+                        {
+                            tempNode.RightChild = new TreeNode { Value = value };
+                        }
+                    }
+                } while (tempNode.LeftChild != null || tempNode.RightChild != null);
+            }
         }
 
         public TreeNode GetNodeByValue(int value)
         {
-            throw new NotImplementedException();
+            var tempNode = root;
+            do
+            {
+                if (value == tempNode.Value)
+                    return tempNode;
+
+                if (value < tempNode.Value)
+                {
+                    if (tempNode.LeftChild != null)
+                    {
+                        if (value == tempNode.LeftChild.Value)
+                            return tempNode.LeftChild;
+                        else
+                        {
+                            tempNode = tempNode.LeftChild;
+                        }
+                    }
+                    
+                }
+                if (value > tempNode.Value)
+                {
+                    if (tempNode.RightChild != null)
+                    {
+                        if (value == tempNode.RightChild.Value)
+                            return tempNode.RightChild;
+                        else
+                        {
+                            tempNode = tempNode.RightChild;
+                        }
+                    }
+                    
+                }
+            } while (tempNode.LeftChild != null || tempNode.RightChild != null);
+            return null;
         }
 
         public TreeNode GetRoot()
         {
-            throw new NotImplementedException();
+            return root;
         }
 
         public void PrintTree()
         {
-            throw new NotImplementedException();
+            if (root != null)
+            {
+                printRecursive(root);
+            }
+        }
+
+        public void printRecursive(TreeNode root)
+        {
+            Console.WriteLine("", root.Value);
+            printRecursive(root.LeftChild);
+            printRecursive(root.RightChild);
         }
 
         public void RemoveItem(int value)
         {
-            throw new NotImplementedException();
+            var tempNode = root;
+            if (value == root.Value)
+            {
+                root.LeftChild = null;
+                root.RightChild = null;
+                Console.WriteLine("Tree was elliminated successfull!");
+            }
+/*            else 
+            {
+                do
+                {
+                    if (value == tempNode.Value && tempNode)
+                    {
+                        
+                    }
+                } while (tempNode.LeftChild != null || tempNode.RightChild != null);
+            }*/
         }
     }
 
