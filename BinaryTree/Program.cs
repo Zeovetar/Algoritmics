@@ -14,7 +14,7 @@ namespace BinaryTree
             tree.AddItem(9);
             var strRoot = tree.GetRoot();
             Console.WriteLine(strRoot.Value);
-            var searchNode = tree.GetNodeByValue(8);
+            var searchNode = tree.GetNodeByValue(8, false);
             try
             {
                 Console.WriteLine($"Value: {searchNode.Value}, LeftChild: {searchNode.LeftChild}, RightChild: {searchNode.RightChild}");
@@ -54,7 +54,7 @@ namespace BinaryTree
         TreeNode GetRoot();
         void AddItem(int value); // добавить узел
         void RemoveItem(int value); // удалить узел по значению
-        TreeNode GetNodeByValue(int value); //получить узел дерева по значению
+        TreeNode GetNodeByValue(int value, bool previous); //получить узел дерева по значению previous это флаг, который пригодится для удаления
         void PrintTree(); //вывести дерево в консоль
     }
 
@@ -99,7 +99,7 @@ namespace BinaryTree
             }
         }
 
-        public TreeNode GetNodeByValue(int value)
+        public TreeNode GetNodeByValue(int value, bool previous)
         {
             var tempNode = root;
             do
@@ -112,7 +112,10 @@ namespace BinaryTree
                     if (tempNode.LeftChild != null)
                     {
                         if (value == tempNode.LeftChild.Value)
-                            return tempNode.LeftChild;
+                            if (previous)
+                                return tempNode;
+                            else
+                                return tempNode.LeftChild;
                         else
                         {
                             tempNode = tempNode.LeftChild;
@@ -125,7 +128,10 @@ namespace BinaryTree
                     if (tempNode.RightChild != null)
                     {
                         if (value == tempNode.RightChild.Value)
-                            return tempNode.RightChild;
+                            if (previous)
+                                return tempNode;
+                            else
+                                return tempNode.RightChild;
                         else
                         {
                             tempNode = tempNode.RightChild;
@@ -159,22 +165,64 @@ namespace BinaryTree
 
         public void RemoveItem(int value)
         {
-            var tempNode = root;
-            if (value == root.Value)
+            TreeNode node = GetNodeByValue(value, true);
+
+
+        }
+
+        public void Remove(TreeNode node, int value)
+        {
+            if (node == null)
             {
-                root.LeftChild = null;
-                root.RightChild = null;
-                Console.WriteLine("Tree was elliminated successfull!");
+                return;
             }
-/*            else 
+
+            var currentNode = node;
+            //если у узла нет подузлов, можно его удалить
+            if (node.LeftChild.Value == value && node.LeftChild.LeftChild == null && node.LeftChild.RightChild == null)
+                node.LeftChild = null;
+            else if (node.RightChild.Value == value && node.RightChild.RightChild == null && node.LeftChild.RightChild == null)
+                node.RightChild = null;
+
+            //если нет левого, то правый ставим на место удаляемого 
+            if (node.LeftChild.Value == value && node.LeftChild.LeftChild == null && node.LeftChild.RightChild != null)
+                node.LeftChild = node.LeftChild.RightChild;
+            if (node.RightChild.Value == value && node.RightChild.LeftChild == null && node.RightChild.RightChild != null)
+                node.RightChild = node.RightChild.RightChild;
+
+            //если нет правого, то левый ставим на место удаляемого 
+            if (node.LeftChild.Value == value && node.LeftChild.LeftChild != null && node.LeftChild.RightChild == null)
+                node.LeftChild = node.LeftChild.LeftChild;
+            if (node.RightChild.Value == value && node.RightChild.LeftChild != null && node.RightChild.RightChild == null)
+                node.RightChild = node.RightChild.LeftChild;
+
+            //если оба дочерних присутствуют, 
+            //то правый становится на место удаляемого,
+            //а левый вставляется в правый
+/*            else
             {
-                do
+                switch (currentNode)
                 {
-                    if (value == tempNode.Value && tempNode)
-                    {
-                        
-                    }
-                } while (tempNode.LeftChild != null || tempNode.RightChild != null);
+                    case Side.Left:
+                        node.ParentNode.LeftNode = node.RightNode;
+                        node.RightNode.ParentNode = node.ParentNode;
+                        Add(node.LeftNode, node.RightNode);
+                        break;
+                    case Side.Right:
+                        node.ParentNode.RightNode = node.RightNode;
+                        node.RightNode.ParentNode = node.ParentNode;
+                        Add(node.LeftNode, node.RightNode);
+                        break;
+                    default:
+                        var bufLeft = node.LeftNode;
+                        var bufRightLeft = node.RightNode.LeftNode;
+                        var bufRightRight = node.RightNode.RightNode;
+                        node.Data = node.RightNode.Data;
+                        node.RightNode = bufRightRight;
+                        node.LeftNode = bufRightLeft;
+                        Add(bufLeft, node);
+                        break;
+                }
             }*/
         }
     }
