@@ -7,14 +7,28 @@ namespace BinaryTree
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Ebobo");
             var tree = new ChangeTree();
+            tree.AddItem(30);
             tree.AddItem(10);
-            tree.AddItem(7);
-            tree.AddItem(11);
+            tree.AddItem(5);
+            tree.AddItem(20);
+            tree.AddItem(25);
             tree.AddItem(9);
+            tree.AddItem(3);
+            tree.AddItem(2);
+            tree.AddItem(4);
+            tree.AddItem(50);
+            tree.AddItem(40);
+            tree.AddItem(60);
+            tree.AddItem(20);
+            tree.AddItem(45);
+            tree.AddItem(55);
+            tree.AddItem(65);
+            tree.PrintTree();
             var strRoot = tree.GetRoot();
-            Console.WriteLine(strRoot.Value);
-            var searchNode = tree.GetNodeByValue(8, false);
+            Console.WriteLine($"This is root! {strRoot.Value}");
+            var searchNode = tree.GetNodeByValue(10, false);
             try
             {
                 Console.WriteLine($"Value: {searchNode.Value}, LeftChild: {searchNode.LeftChild}, RightChild: {searchNode.RightChild}");
@@ -23,6 +37,9 @@ namespace BinaryTree
             {
                 Console.WriteLine(Ex.Message);
             }
+            tree.PrintTree();
+            tree.RemoveItem(10);
+            Console.WriteLine("After Remove =====================================================================");
             tree.PrintTree();
         }
     }
@@ -69,7 +86,7 @@ namespace BinaryTree
             else
             {
                 var tempNode = root;
-                do
+                while (value != tempNode.Value)
                 {
                     if (value < tempNode.Value)
                     {
@@ -81,9 +98,10 @@ namespace BinaryTree
                         else
                         {
                             tempNode.LeftChild = new TreeNode { Value = value };
+                            break;
                         }
                     }
-                    if (value > tempNode.Value)
+                    else if (value > tempNode.Value)
                     {
                         if (tempNode.RightChild != null)
                         {
@@ -93,10 +111,48 @@ namespace BinaryTree
                         else
                         {
                             tempNode.RightChild = new TreeNode { Value = value };
+                            break;
                         }
                     }
-                } while (tempNode.LeftChild != null || tempNode.RightChild != null);
+                } 
             }
+        }
+
+        public void AddAfterRemove(TreeNode basenode, TreeNode node, TreeNode addednode, int value)
+        {
+            var baseN = basenode;
+            var tempNode = node;
+            do
+            {
+                if (value < tempNode.Value)
+                {
+                    if (tempNode.LeftChild != null)
+                    {
+                        tempNode = tempNode.LeftChild;
+                        depth++;
+                    }
+                    else
+                    {
+                        tempNode.LeftChild = addednode;
+                        baseN.LeftChild = tempNode;
+                        break;
+                    }
+                }
+                if (value > tempNode.Value)
+                {
+                    if (tempNode.RightChild != null)
+                    {
+                        tempNode = tempNode.RightChild;
+                        depth++;
+                    }
+                    else
+                    {
+                        tempNode.RightChild = addednode;
+                        baseN.LeftChild = tempNode;
+                        break;
+                    }
+                }
+            } while (tempNode.LeftChild != null || tempNode.RightChild != null);
         }
 
         public TreeNode GetNodeByValue(int value, bool previous)
@@ -158,16 +214,18 @@ namespace BinaryTree
 
         public void printRecursive(TreeNode root)
         {
-            Console.WriteLine("", root.Value);
-            printRecursive(root.LeftChild);
-            printRecursive(root.RightChild);
+            if (root != null)
+            {
+                Console.WriteLine($"Node value: {root.Value}");
+                printRecursive(root.LeftChild);
+                printRecursive(root.RightChild);
+            }
         }
 
         public void RemoveItem(int value)
         {
             TreeNode node = GetNodeByValue(value, true);
-
-
+            Remove(node, value);
         }
 
         public void Remove(TreeNode node, int value)
@@ -199,31 +257,14 @@ namespace BinaryTree
             //если оба дочерних присутствуют, 
             //то правый становится на место удаляемого,
             //а левый вставляется в правый
-/*            else
+            if (node.LeftChild.Value == value && node.LeftChild.LeftChild != null && node.LeftChild.RightChild != null)
             {
-                switch (currentNode)
-                {
-                    case Side.Left:
-                        node.ParentNode.LeftNode = node.RightNode;
-                        node.RightNode.ParentNode = node.ParentNode;
-                        Add(node.LeftNode, node.RightNode);
-                        break;
-                    case Side.Right:
-                        node.ParentNode.RightNode = node.RightNode;
-                        node.RightNode.ParentNode = node.ParentNode;
-                        Add(node.LeftNode, node.RightNode);
-                        break;
-                    default:
-                        var bufLeft = node.LeftNode;
-                        var bufRightLeft = node.RightNode.LeftNode;
-                        var bufRightRight = node.RightNode.RightNode;
-                        node.Data = node.RightNode.Data;
-                        node.RightNode = bufRightRight;
-                        node.LeftNode = bufRightLeft;
-                        Add(bufLeft, node);
-                        break;
-                }
-            }*/
+                AddAfterRemove(node, node.LeftChild.RightChild, node.LeftChild.LeftChild, node.LeftChild.LeftChild.Value);
+            }
+            if (node.RightChild.Value == value && node.RightChild.LeftChild != null && node.RightChild.RightChild != null)
+            {
+                AddAfterRemove(node, node.RightChild.RightChild, node.RightChild.LeftChild, node.RightChild.LeftChild.Value);
+            }
         }
     }
 
