@@ -7,7 +7,6 @@ namespace BinaryTree
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Ebobo");
             var tree = new ChangeTree();
             tree.AddItem(30);
             tree.AddItem(10);
